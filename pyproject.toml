@@ -1,0 +1,14 @@
+[project]
+name = "book-scraping"
+version = "0.1.0"
+description = "A set of scripts that collect data about popular lists, books, and their details."
+requires-python = ">=3.13"
+dependencies = [
+    "beautifulsoup4>=4.14.2",
+    "black>=25.9.0",
+    "httpx>=0.28.1",
+    "pandas>=2.3.3",
+    "pyarrow>=21.0.0",
+    "structlog>=25.4.0",
+    "tenacity>=9.1.2",
+]
