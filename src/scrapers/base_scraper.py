@@ -26,16 +26,13 @@ class BaseScraper:
         self._logger = get_logger(__name__)
 
     @staticmethod
-    def _make_current_date_dir() -> None:
+    def _make_current_date_dir(base_dir: Path) -> None:
         """Create a current date directory in the raw data path.
 
+        :param base_dir: Base directory of the current date.
         :return: None.
         """
-        current_date_dir = BaseConstants.RAW_DATA_DIR.joinpath(
-            BaseConstants.CURRENT_DATE
-        )
-
-        os.makedirs(current_date_dir, exist_ok=True)
+        os.makedirs(base_dir, exist_ok=True)
 
     def _generate_urls(self, path_parameter: str) -> list[str]:
         """Generate a list of source URLs.
@@ -52,7 +49,8 @@ class BaseScraper:
 
     @staticmethod
     def _rotate_header(headers: list[dict[str, str]]) -> dict[str, str]:
-        """Rotate the header to use a different 'User-Agent' for each request.
+        """Rotate the header to use a different 'User-Agent' for each
+        request.
 
         :param headers: List of 'User-Agent' dictionaries to rotate.
         :return: Rotated header.
@@ -93,8 +91,9 @@ class BaseScraper:
 
         return filepath
 
-    async def get_html_data(self, url: str, client: AsyncClient):
-        """Make an asynchronous request to the source and get the HTML data.
+    async def get_html_data(self, url: str, client: AsyncClient) -> str | None:
+        """Make an asynchronous request to the source and get
+        the HTML data.
 
         :param url: A URL of the source.
         :param client: An asynchronous HTTP client.
@@ -115,14 +114,17 @@ class BaseScraper:
                     return html_data
         except RetryError as exc:
             self._logger.error(
-                f"Failed to get data after multiple retries for '{url}' due to '{exc}'"
+                f"Failed to get data after multiple retries for '{url}' "
+                f"due to '{exc}'"
             )
         except Exception as exc:
             self._logger.error(
                 f"An unexpected exception for '{url}' due to '{exc}'"
             )
 
-    async def make_requests(self, urls: list[str], client: AsyncClient):
+    async def make_requests(
+        self, urls: list[str], client: AsyncClient
+    ) -> list:
         """Make a group of asynchronous requests to appropriate sources.
 
         :param urls: List of URLs to scrape.
@@ -157,16 +159,14 @@ class BaseScraper:
             max_connections=BaseConstants.MAX_CONNECTIONS,
             max_keepalive_connections=BaseConstants.MAX_KEEPALIVE_CONNECTIONS,
         )
-        self._make_current_date_dir()
+        self._make_current_date_dir(base_dir=BaseConstants.RAW_DATA_DIR)
 
         async with AsyncClient(limits=limits) as client:
             tasks = await self.make_requests(urls=urls, client=client)
 
         for idx, task in enumerate(tasks, start=1):
             filepath = self._get_filepath(
-                base_path=BaseConstants.RAW_DATA_DIR.joinpath(
-                    BaseConstants.CURRENT_DATE
-                ),
+                base_path=BaseConstants.RAW_DATA_DIR,
                 file_prefix=file_prefix,
                 batch=batch,
                 idx=idx,

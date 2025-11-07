@@ -14,7 +14,7 @@ class BookDetailsScraper(BaseScraper):
         :return: List of URLs.
         """
         filepath = BaseConstants.PROCESSED_DATA_DIR.joinpath(
-            BaseConstants.CURRENT_DATE, "books.parquet.gz"
+            "books.parquet.gz"
         )
         books_df = self._read_to_df(filepath=filepath)
 

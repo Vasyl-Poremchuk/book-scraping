@@ -16,10 +16,9 @@ class PopularListParser(BaseParser):
         :param raw_filepath: Path to the file to parse.
         :return: List of popular lists.
         """
-        popular_lists_data = []
-
-        filename = raw_filepath.name
         html_data = self._read_html_data(filepath=raw_filepath)
+
+        popular_lists_data = []
 
         if html_data is None:
             return []
@@ -58,9 +57,7 @@ class PopularListParser(BaseParser):
         :return: List of popular lists.
         """
         raw_filepaths = self._get_filepaths(
-            data_dir=BaseConstants.RAW_DATA_DIR.joinpath(
-                BaseConstants.CURRENT_DATE
-            )
+            data_dir=BaseConstants.RAW_DATA_DIR
         )
         parsed_list_of_popular_lists = []
 
@@ -90,7 +87,8 @@ class PopularListParser(BaseParser):
                     parsed_list_of_popular_lists.extend(parsed_popular_lists)
                 except Exception as exc:
                     self._logger.error(
-                        f"An exception occurred while parsing '{filename}', due to '{exc}'"
+                        f"An exception occurred while parsing '{filename}' "
+                        f"due to '{exc}'"
                     )
 
         end = time.perf_counter()

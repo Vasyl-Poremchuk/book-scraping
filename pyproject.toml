@@ -13,3 +13,41 @@ dependencies = [
     "structlog>=25.4.0",
     "tenacity>=9.1.2",
 ]
+
+[tool.ruff]
+# Exclude a variety of commonly ignore directories.
+exclude = [
+    ".git",
+    ".pytest_cache",
+    ".ruff_cache",
+    ".venv",
+]
+
+line-length = 79
+indent-width = 4
+
+[tool.ruff.lint]
+# Enable Pyflakes (`F`) and pycodestyle (`E` & `W`) codes by default.
+select = ["F", "E", "W"]
+ignore = []
+
+# Allow fix for all enabled rules (when `--fix`) is provided.
+fixable = ["ALL"]
+unfixable = []
+
+[tool.ruff.format]
+# Like Black, use double quotes for strings.
+quote-style = "double"
+
+# Like Black, indent with spaces, rather that tabs.
+indent-style = "space"
+
+# Like Black, respect magic trailing commas.
+skip-magic-trailing-comma = false
+
+# Like Black, automatically detect the appropriate line ending.
+line-ending = "auto"
+
+[tool.ruff.lint.pycodestyle]
+# Maximum line length for docstrings and comments.
+max-doc-length = 72

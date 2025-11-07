@@ -18,7 +18,6 @@ class BookParser(BaseParser):
         :param raw_filepath: Path to the file to parse.
         :return: List of books.
         """
-        filename = raw_filepath.name
         html_data = self._read_html_data(filepath=raw_filepath)
         soup = self.get_soup(html_data=html_data)
 
@@ -51,7 +50,9 @@ class BookParser(BaseParser):
             if score_tag:
                 score = score_tag.text.strip()
 
-            people_voted_tag = tr_tag.find(name="a", string=re.compile(r"people voted$"))  # type: ignore[arg-type]
+            people_voted_tag = (
+                tr_tag.find(name="a", string=re.compile(r"people voted$"))  # type: ignore[arg-type]
+            )
 
             if people_voted_tag:
                 people_voted = people_voted_tag.text.strip()
@@ -76,9 +77,7 @@ class BookParser(BaseParser):
         :return: List of books.
         """
         raw_filepaths = self._get_filepaths(
-            data_dir=BaseConstants.RAW_DATA_DIR.joinpath(
-                BaseConstants.CURRENT_DATE
-            )
+            data_dir=BaseConstants.RAW_DATA_DIR
         )
         parsed_list_of_books = []
 
@@ -106,7 +105,8 @@ class BookParser(BaseParser):
                     parsed_list_of_books.extend(parsed_books)
                 except Exception as exc:
                     self._logger.error(
-                        f"An exception occurred while parsing '{filename}', due to '{exc}'"
+                        f"An exception occurred while parsing '{filename}' "
+                        f"due to '{exc}'"
                     )
 
         end = time.perf_counter()

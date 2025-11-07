@@ -16,16 +16,13 @@ class BaseParser:
         self._logger = get_logger(__name__)
 
     @staticmethod
-    def _make_current_date_dir() -> None:
+    def _make_current_date_dir(base_dir: Path) -> None:
         """Create a current date directory in the processed data path.
 
+        :param base_dir: Base directory of the current date.
         :return: None.
         """
-        current_date_dir = BaseConstants.PROCESSED_DATA_DIR.joinpath(
-            BaseConstants.CURRENT_DATE
-        )
-
-        os.makedirs(current_date_dir, exist_ok=True)
+        os.makedirs(base_dir, exist_ok=True)
 
     def _get_raw_filepath(self, page: int) -> Path:
         """Get a path to the file to parse.
@@ -34,7 +31,7 @@ class BaseParser:
         :return: Path to the file.
         """
         raw_filepath = BaseConstants.RAW_DATA_DIR.joinpath(
-            BaseConstants.CURRENT_DATE, f"{self.file_prefix}_{page}.html.gz"
+            f"{self.file_prefix}_{page}.html.gz"
         )
 
         return raw_filepath
@@ -44,10 +41,10 @@ class BaseParser:
 
         :return: Path to the file.
         """
-        self._make_current_date_dir()
+        self._make_current_date_dir(base_dir=BaseConstants.PROCESSED_DATA_DIR)
 
         processed_filepath = BaseConstants.PROCESSED_DATA_DIR.joinpath(
-            BaseConstants.CURRENT_DATE, f"{self.file_prefix}.parquet.gz"
+            f"{self.file_prefix}.parquet.gz"
         )
 
         return processed_filepath

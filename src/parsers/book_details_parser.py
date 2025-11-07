@@ -34,8 +34,8 @@ class BookDetailsParser(BaseParser):
 
     @staticmethod
     def normalize_attr(attr: str, attrs_map: dict[str, str] = None) -> str:
-        """Normalize the attribute by converting it to snake case and removing
-        punctuation characters.
+        """Normalize the attribute by converting it to snake case
+        and removing punctuation characters.
 
         :param attr: The attribute to normalize.
         :param attrs_map: Attribute mapping for complex cases.
@@ -124,7 +124,8 @@ class BookDetailsParser(BaseParser):
 
         :param data: Data to filter.
         :param genre_prefix: The genre prefix filter by.
-        :return: Filtered data.
+        :return: True if data needs to be filtered,
+            otherwise False if not.
         """
         for value in data:
             book_genres = value.get("book_genres")
@@ -146,17 +147,22 @@ class BookDetailsParser(BaseParser):
         :param raw_filepath: Path to the file to parse.
         :return: Book details.
         """
-        filename = raw_filepath.name
         html_data = self._read_html_data(filepath=raw_filepath)
         soup = self.get_soup(html_data=html_data)
 
         book_title_tag = soup.find(
             name="h1", attrs={"data-testid": "bookTitle"}
         )
-        book_title = book_title_tag.text.strip()
+        book_title = None
+
+        if book_title_tag:
+            book_title = book_title_tag.text.strip()
 
         name_tag = soup.find(name="span", attrs={"data-testid": "name"})
-        name = name_tag.text.strip()
+        name = None
+
+        if name_tag:
+            name = name_tag.text.strip()
 
         next_data_tag = soup.find(
             name="script",
@@ -249,9 +255,7 @@ class BookDetailsParser(BaseParser):
         :return: List of books details.
         """
         raw_filepaths = self._get_filepaths(
-            data_dir=BaseConstants.RAW_DATA_DIR.joinpath(
-                BaseConstants.CURRENT_DATE
-            )
+            data_dir=BaseConstants.RAW_DATA_DIR
         )
         parsed_books_details = []
 
@@ -284,7 +288,7 @@ class BookDetailsParser(BaseParser):
                     parsed_books_details.append(parsed_book_details)
                 except Exception as exc:
                     self._logger.error(
-                        f"An exception occurred while parsing '{filename}', "
+                        f"An exception occurred while parsing '{filename}' "
                         f"due to '{exc}'"
                     )
 
