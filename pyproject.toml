@@ -15,7 +15,7 @@ dependencies = [
 ]
 
 [tool.ruff]
-# Exclude a variety of commonly ignore directories.
+# Exclude a variety of commonly ignored directories.
 exclude = [
     ".git",
     ".pytest_cache",
