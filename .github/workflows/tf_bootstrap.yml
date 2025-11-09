@@ -1,0 +1,48 @@
+name: Terraform Bootstrap
+
+on:
+  workflow_dispatch:
+
+permissions:
+  id-token: write
+  contents: read
+
+jobs:
+  terraform-bootstrap:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v5
+
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v5
+        with:
+          role-to-assume: ${{ secrets.AWS_ROLE_TO_ASSUME }}
+          aws-region: us-east-1
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v3
+        with:
+          # Install a specific version of Terraform.
+          terraform_version: 1.13.0
+
+      - name: Terraform Init
+        run: |
+          cd terraform/bootstrap
+          terraform init
+
+      - name: Terraform Validate
+        run: |
+          cd terraform/bootstrap
+          terraform validate
+
+      - name: Terraform Plan
+        run: |
+          cd terraform/bootstrap
+          terraform plan -out=tfplan
+
+      - name: Terraform Apply
+        run: |
+          cd terraform/bootstrap
+          terraform apply -auto-approve tfplan
