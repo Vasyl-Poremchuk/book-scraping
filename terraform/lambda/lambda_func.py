@@ -1,11 +1,12 @@
 import json
+import logging
 import os
 
 import boto3
-from structlog import get_logger
 
+logger = logging.getLogger(__name__)
+logger.setLevel(logging.INFO)
 
-logger = get_logger(__name__)
 ecs_client = boto3.client("ecs")
 
 
