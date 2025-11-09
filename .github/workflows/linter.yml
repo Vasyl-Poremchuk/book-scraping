@@ -27,4 +27,4 @@ jobs:
         run: uv sync --locked --all-extras --dev
 
       - name: Run Ruff Linter
-        run: ruff check .
+        run: uv run ruff check .
