@@ -14,6 +14,7 @@ class BaseConstants:
     PAGES = 100
     BATCH_SIZE = 1000
     MAX_WORKERS = 10
+    S3_BUCKET = "book-scraping-data"
     HEADERS = [
         {
             "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) "
