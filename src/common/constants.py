@@ -11,7 +11,7 @@ class BaseConstants:
     PROCESSED_DATA_DIR = DATA_DIR.joinpath("processed", CURRENT_DATE)
     MAX_CONNECTIONS = 10
     MAX_KEEPALIVE_CONNECTIONS = 10
-    PAGES = 100
+    PAGES = 3
     BATCH_SIZE = 1000
     MAX_WORKERS = 10
     S3_BUCKET = "book-scraping-data"
